@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/Catkin_ws/install
+
+Name: rr_openrover_driver_msgs
+Description: Description of rr_openrover_driver_msgs
+Version: 2.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime std_msgs

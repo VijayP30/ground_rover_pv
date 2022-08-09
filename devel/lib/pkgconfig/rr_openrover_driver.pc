@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/Catkin_ws/devel
+
+Name: rr_openrover_driver
+Description: Description of rr_openrover_driver
+Version: 2.0.0
+Cflags: -I/home/ubuntu/Catkin_ws/src/rr_openrover_driver/include
+Libs: -L${prefix}/lib 
+Requires: message_runtime rr_openrover_driver_msgs sensor_msgs ds4_driver

@@ -1,0 +1,7 @@
+set(rr_rover_zero_driver_SETUP_PY_SETUP_MODULE "distutils.core")
+set(rr_rover_zero_driver_SETUP_PY_VERSION "2.0.1")
+set(rr_rover_zero_driver_SETUP_PY_SCRIPTS "")
+set(rr_rover_zero_driver_SETUP_PY_PACKAGES "roboclaw_driver")
+set(rr_rover_zero_driver_SETUP_PY_PACKAGE_DIRS "driver/roboclaw_driver")
+set(rr_rover_zero_driver_SETUP_PY_MODULES "")
+set(rr_rover_zero_driver_SETUP_PY_MODULE_DIRS "")

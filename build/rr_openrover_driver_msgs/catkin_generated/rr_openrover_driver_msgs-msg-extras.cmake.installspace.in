@@ -1,0 +1,2 @@
+set(rr_openrover_driver_msgs_MESSAGE_FILES "msg/RawRrOpenroverDriverFastRateData.msg;msg/RawRrOpenroverDriverMedRateData.msg;msg/RawRrOpenroverDriverSlowRateData.msg;msg/SmartBatteryStatus.msg")
+set(rr_openrover_driver_msgs_SERVICE_FILES "")

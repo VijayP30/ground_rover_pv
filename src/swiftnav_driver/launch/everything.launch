@@ -1,0 +1,126 @@
+<launch>
+    <arg name="openrover_node_name" default="rr_openrover_driver" />
+    <arg name="config_locks"  default="$(find rr_openrover_driver)/config/twist_mux_locks.yaml"/>
+    <arg name="config_topics" default="$(find rr_openrover_driver)/config/twist_mux_topics.yaml"/>
+
+    <!-- OpenRover Driver -->
+    <node pkg="rr_openrover_driver" type="openrover_driver_node" name="$(arg openrover_node_name)" respawn="false" output="screen">
+        <param name="port" value="/dev/ttyUSB1" />
+        <param name="drive_type" value="2wd" />
+        <param name="enable_timeout" type="bool" value="true"/>
+        <param name="timeout" type="double" value="0.3"/>
+        <param name="closed_loop_control_on" type="bool" value="false" />
+        <!--<param name="closed_loop_control_on" type="bool" value="true" />--><!-- Requires fast_data_rate >= 60 -->
+        <param name="total_weight" type="double" value="20.41"/>
+        <param name="traction_factor" value="0.610"/>
+        <param name="odom_covariance_0" value="0.01"/>
+        <param name="odom_covariance_35" value="0.03"/>
+
+        <param name="fast_data_rate" value="10.0"/>
+        <param name="medium_data_rate" value="2.0"/>
+        <param name="slow_data_rate" value="1.0"/>
+    </node>
+
+    <!-- OpenRover Diagnostics -->
+    <node pkg="rr_openrover_driver" type="diagnostics.py" name="rr_openrover_diagnostics_node" output="log">
+        <remap from="/raw_slow_rate_data" to="/$(arg openrover_node_name)/raw_slow_rate_data"/>
+    </node>
+
+    <!-- Xbox 360 Controller Button Mapping -->
+    <!--<node pkg="rr_control_input_manager" type="xbox_mapper.py" name="rr_xbox_mapper_node" output="screen" >
+        <remap from="joy" to="/joystick" />
+        <remap from="/joystick/a_button" to="/soft_estop/enable" />
+        <remap from="/joystick/b_button" to="/soft_estop/reset" />
+        <remap from="/joystick/y_button" to="/joy_priority" />
+        <remap from="/joystick/x_button" to="/pause_navigation"/>
+        <param name="max_vel_fwd" value="0.4" />
+        <param name="max_vel_turn" value="7.0" />
+        <param name="adjustable_throttle" value="True" />
+        <param name="drive_increment" value="20" />
+        <param name="flipper_increment" value="20" />
+        <param name="x_button_toggle" value="true"/>
+        <param name="y_button_toggle" value="true"/>
+    </node>-->
+
+    <!--  Twist Mux  -->
+    <node pkg="twist_mux" type="twist_mux" name="twist_mux" output="screen">
+        <remap from="cmd_vel_out" to="/cmd_vel/managed"/>
+
+        <rosparam file="$(arg config_locks)"  command="load"/>
+        <rosparam file="$(arg config_topics)" command="load"/>
+    </node>
+
+    <!-- Control input manager -->
+    <!--<node pkg="rr_control_input_manager" type="control_input_manager.py" name="rr_control_input_manager_node" output="log" >
+        <param name="driver" value="xboxdrv"/>
+        <param name="wired_or_wireless" value="wired"/>
+        <rosparam file="$(find rr_control_input_manager)/config/input_topics.yaml" command="load"/>
+    </node>-->
+
+    <!-- Xbox controller driver -->
+    <!--<node pkg="joy" type="joy_node" name="joy_node" output="screen" respawn="true" >
+        <param name="autorepeat_rate" value="10" />
+        <param name="dev" value="/dev/input/js0" />
+        <remap from="/joy" to="/joystick" />
+    </node>-->
+
+    <rosparam command="load" file="$(find husky_control)/config/teleop_ps4.yaml" />
+    <node pkg="joy" type="joy_node" name="joy_node" />
+    <node pkg="teleop_twist_joy" type="teleop_node" name="teleop_twist_joy"/>
+  
+  <arg name="gyro_fps"            default="200"/>
+  <arg name="accel_fps"           default="200"/>
+  <arg name="enable_gyro"         default="true"/>
+  <arg name="enable_accel"        default="true"/>
+  <arg name="unite_imu_method"          default="linear_interpolation"/>
+    
+  <arg name="serial_no_camera1"    			default="035422071600"/> 			<!-- Note: Replace with actual serial number -->
+  <arg name="serial_no_camera2"    			default="817512070887"/> 			<!-- Note: Replace with actual serial number -->
+  <arg name="serial_no_camera3"    			default=""/> 			<!-- Note: Replace with actual serial number -->
+  <arg name="camera1"              			default="camera1"/>		<!-- Note: Replace with camera name -->
+  <arg name="camera2"              			default="camera2"/>		<!-- Note: Replace with camera name -->
+  <arg name="camera3"              			default="camera3"/>		<!-- Note: Replace with camera name -->
+  <arg name="tf_prefix_camera1"         default="$(arg camera1)"/>
+  <arg name="tf_prefix_camera2"         default="$(arg camera2)"/>
+  <arg name="tf_prefix_camera3"         default="$(arg camera3)"/>
+  <arg name="initial_reset"             default="false"/>
+  <arg name="reconnect_timeout"         default="6.0"/>
+
+  <group ns="$(arg camera1)">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+      <arg name="serial_no"             value="$(arg serial_no_camera1)"/>
+      <arg name="tf_prefix"         		value="$(arg tf_prefix_camera1)"/>
+      <arg name="initial_reset"         value="$(arg initial_reset)"/>
+      <arg name="gyro_fps"                 value="$(arg gyro_fps)"/>
+      <arg name="accel_fps"                value="$(arg accel_fps)"/>
+      <arg name="enable_gyro"              value="$(arg enable_gyro)"/>
+      <arg name="enable_accel"             value="$(arg enable_accel)"/>
+      <arg name="unite_imu_method"         value="$(arg unite_imu_method)"/>
+      <arg name="reconnect_timeout"     value="$(arg reconnect_timeout)"/>
+    </include>
+  </group>
+
+  <group ns="$(arg camera2)">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+      <arg name="serial_no"             value="$(arg serial_no_camera2)"/>
+      <arg name="tf_prefix"		          value="$(arg tf_prefix_camera2)"/>
+      <arg name="initial_reset"         value="$(arg initial_reset)"/>
+      <arg name="gyro_fps"                 value="$(arg gyro_fps)"/>
+      <arg name="accel_fps"                value="$(arg accel_fps)"/>
+      <arg name="enable_gyro"              value="$(arg enable_gyro)"/>
+      <arg name="enable_accel"             value="$(arg enable_accel)"/>
+      <arg name="unite_imu_method"         value="$(arg unite_imu_method)"/>
+      <arg name="reconnect_timeout"     value="$(arg reconnect_timeout)"/>
+    </include>
+  </group>
+
+  <group ns="$(arg camera3)" if="$(eval serial_no_camera3 != '')">
+    <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
+      <arg name="serial_no"             value="$(arg serial_no_camera3)"/>
+      <arg name="tf_prefix"		          value="$(arg tf_prefix_camera3)"/>
+      <arg name="initial_reset"         value="$(arg initial_reset)"/>
+      <arg name="reconnect_timeout"     value="$(arg reconnect_timeout)"/>
+    </include>
+  </group>
+  <node pkg="swiftnav_driver" type="swiftnav_ros_driver_original_USB0_duro.py" name="gps"/>
+</launch>

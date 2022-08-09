@@ -1,0 +1,8 @@
+prefix=/home/ubuntu/Catkin_ws/install
+
+Name: rr_control_input_manager
+Description: Description of rr_control_input_manager
+Version: 2.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
