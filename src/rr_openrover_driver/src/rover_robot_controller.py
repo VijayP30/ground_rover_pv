@@ -58,54 +58,42 @@ class Rover_Robot_Controller:
                 , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
         stop_cnt = 1.0
         while self.euclidean_distance() >= distance_tolerance:
-            # # Calculates current distance
-            # current_dist1 = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
-            #     , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
-            # print(current_dist1)
-            # print(original_distance - stop_cnt + 0.3)
-            # print(original_distance - stop_cnt - 0.3)
-            # # If current distance is one meter away from last stop/original distance, stop (+-0.3m error)
-            # if current_dist1 <= (original_distance - stop_cnt + 0.3) and current_dist1 >= (original_distance - stop_cnt - 0.3):
-            #     print("Hi")
-            #     stop_cnt += 1.0
-            #     t_start = time.time()
-            #     while time.time() <= t_start + 1.25:
-            #         # vel_msg = Twist()
-            #         vel_msg.linear.x = vel_msg.linear.x - 0.5 * (time.time() - t_start)
-            #         self.velocity_publisher.publish(vel_msg)
-            #         if vel_msg.linear.x <= 0:
-            #             vel_msg.linear.x = 0
-            #             self.velocity_publisher.publish(vel_msg)
-            #             break
-            #     t_end = time.time() + 5
-            #     while time.time() <= t_end:
-            #         vel_msg = Twist()
-            #         vel_msg.linear.x = 0
-            #         vel_msg.linear.y = 0
-            #         vel_msg.linear.z = 0
-            #         vel_msg.angular.x = 0
-            #         vel_msg.angular.y = 0
-            #         vel_msg.angular.z = 0
-            #         self.velocity_publisher.publish(vel_msg)
-            t_end_1 = time.time() + 2
-            while time.time() <= t_end_1:
-                vel_msg.linear.x = self.linear_vel()
-                vel_msg.linear.y = 0
-                vel_msg.linear.z = 0
-                vel_msg.angular.x = 0
-                vel_msg.angular.y = 0
-                vel_msg.angular.z = 0
-                self.velocity_publisher.publish(vel_msg)
-            t_end_2 = time.time() + 5
-            while time.time() <= t_end_2:
-                print("Stopping")
-                vel_msg.linear.x = 0
-                vel_msg.linear.y = 0
-                vel_msg.linear.z = 0
-                vel_msg.angular.x = 0
-                vel_msg.angular.y = 0
-                vel_msg.angular.z = 0
-                self.velocity_publisher.publish(vel_msg)
+            # Calculates current distance
+            current_dist1 = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
+                , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
+            print(current_dist1)
+            print(original_distance - stop_cnt + 0.3)
+            print(original_distance - stop_cnt - 0.3)
+            # If current distance is one meter away from last stop/original distance, stop (+-0.3m error)
+            if current_dist1 <= (original_distance - stop_cnt + 0.3) and current_dist1 >= (original_distance - stop_cnt - 0.3):
+                print("Hi")
+                stop_cnt += 1.0
+                t_start = time.time()
+                while time.time() <= t_start + 1.25:
+                    # vel_msg = Twist()
+                    vel_msg.linear.x = vel_msg.linear.x - 0.5 * (time.time() - t_start)
+                    self.velocity_publisher.publish(vel_msg)
+                    if vel_msg.linear.x <= 0:
+                        vel_msg.linear.x = 0
+                        self.velocity_publisher.publish(vel_msg)
+                        break
+                t_end = time.time() + 5
+                while time.time() <= t_end:
+                    vel_msg = Twist()
+                    vel_msg.linear.x = 0
+                    vel_msg.linear.y = 0
+                    vel_msg.linear.z = 0
+                    vel_msg.angular.x = 0
+                    vel_msg.angular.y = 0
+                    vel_msg.angular.z = 0
+                    self.velocity_publisher.publish(vel_msg)
+            vel_msg.linear.x = self.linear_vel()
+            vel_msg.linear.y = 0
+            vel_msg.linear.z = 0
+            vel_msg.angular.x = 0
+            vel_msg.angular.y = 0
+            vel_msg.angular.z = 0
+            self.velocity_publisher.publish(vel_msg)
             self.rate.sleep()
         # vel_msg.linear.x = 0
         # vel_msg.angular.z = 0
