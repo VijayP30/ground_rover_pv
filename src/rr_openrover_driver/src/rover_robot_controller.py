@@ -98,6 +98,7 @@ class Rover_Robot_Controller:
                 self.velocity_publisher.publish(vel_msg)
             t_end_2 = time.time() + 5
             while time.time() <= t_end_2:
+                print("Stopping")
                 vel_msg.linear.x = 0
                 vel_msg.linear.y = 0
                 vel_msg.linear.z = 0
@@ -109,6 +110,15 @@ class Rover_Robot_Controller:
         # vel_msg.linear.x = 0
         # vel_msg.angular.z = 0
         # self.velocity_publisher.publish(vel_msg)
+        print("Stopping")
+        vel_msg = Twist()
+        vel_msg.linear.x = 0
+        vel_msg.linear.y = 0
+        vel_msg.linear.z = 0
+        vel_msg.angular.x = 0
+        vel_msg.angular.y = 0
+        vel_msg.angular.z = 0
+        self.velocity_publisher.publish(vel_msg)
         rospy.spin()
 
 if __name__ == '__main__':
