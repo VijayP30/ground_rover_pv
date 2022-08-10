@@ -70,7 +70,7 @@ class Rover_Robot_Controller:
                 stop_cnt += 1.0
                 t_start = time.time()
                 while time.time() <= t_start + 1.25:
-                    vel_msg = Twist()
+                    # vel_msg = Twist()
                     vel_msg.linear.x = vel_msg.linear.x - 0.5 * (time.time() - t_start)
                     self.velocity_publisher.publish(vel_msg)
                     if vel_msg.linear.x <= 0:
