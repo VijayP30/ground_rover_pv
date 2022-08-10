@@ -1,4 +1,4 @@
-!/usr/bin/env python
+#!/usr/bin/env python
 import rospy
 from geometry_msgs.msg import Twist
 from nav_msgs.msg import Odometry
@@ -68,8 +68,17 @@ class Rover_Robot_Controller:
             if current_dist1 <= (original_distance - stop_cnt + 0.3) and current_dist1 >= (original_distance - stop_cnt - 0.3):
                 print("Hi")
                 stop_cnt += 1.0
+                t_start = time.time()
+                while time.time() <= t_start + 1.25:
+                    vel_msg = Twist()
+                    vel_msg.linear.x = vel_msg.linear.x - 0.5 * (time.time() - t_start)
+                    self.velocity_publisher.publish(vel_msg)
+                    if vel_msg.linear.x <= 0:
+                        vel_msg.linear.x = 0
+                        self.velocity_publisher.publish(vel_msg)
+                        break
                 t_end = time.time() + 5
-                while time.time() < t_end:
+                while time.time() <= t_end:
                     vel_msg = Twist()
                     vel_msg.linear.x = 0
                     vel_msg.linear.y = 0
