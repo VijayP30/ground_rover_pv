@@ -18,7 +18,7 @@ class Rover_Robot_Controller:
         self.loc_subscriber = rospy.Subscriber('/gps_driver/pos_llh',gps_loc, self.update_location)
         self.current_location = gps_loc()
         self.max_speed = 0.5
-        self.goal_lat_long = (44.97615217860632,-93.23228834999514)
+        self.goal_lat_long = (44.97614113526282,-93.23229311242571)
 
         self.rate = rospy.Rate(20)
 
@@ -54,13 +54,11 @@ class Rover_Robot_Controller:
         # self.goal_lat_long = (lat, long)
         distance_tolerance = 1
         vel_msg = Twist()
-        original_distance = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
-                , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
+        original_distance = self.euclidean_distance()
         stop_cnt = 1.0
         while self.euclidean_distance() >= distance_tolerance:
             # Calculates current distance
-            current_dist1 = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
-                , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
+            current_dist1 = self.euclidean_distance()
             print(current_dist1)
             print(original_distance - stop_cnt + 0.3)
             print(original_distance - stop_cnt - 0.3)
@@ -115,3 +113,4 @@ if __name__ == '__main__':
         x.move2goal()
     except rospy.ROSInterruptException:
         pass
+

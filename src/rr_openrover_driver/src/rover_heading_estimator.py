@@ -43,6 +43,6 @@ class Rover_Robot_Controller:
         while not rospy.is_shutdown():
             rospy.spin()
 
-# print("hi")
+print("hi")
 rover_controller = Rover_Robot_Controller()
 rover_controller.heading_estimator()

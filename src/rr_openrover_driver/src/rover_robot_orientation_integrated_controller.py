@@ -142,7 +142,30 @@ class Rover_Robot_Controller:
         original_distance = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
                 , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
         stop_cnt = 1.0
+
         while self.euclidean_distance() >= distance_tolerance:
+
+            # Calculates current distance
+            # current_dist1 = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
+            #     , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
+            # print(current_dist1)
+            # print(original_distance - stop_cnt + 0.3)
+            # print(original_distance - stop_cnt - 0.3)
+            # If current distance is one meter away from last stop/original distance, stop (+-0.3m error)
+            # if current_dist1 <= (original_distance - stop_cnt + 0.3) and current_dist1 >= (original_distance - stop_cnt - 0.3):
+                # print("Hi")
+            #     stop_cnt += 1.0
+            #     t_end = time.time() + 5
+            #     while time.time() < t_end:
+            #         vel_msg = Twist()
+            #         vel_msg.linear.x = 0
+            #         vel_msg.linear.y = 0
+            #         vel_msg.linear.z = 0
+            #         vel_msg.angular.x = 0
+            #         vel_msg.angular.y = 0
+            #         vel_msg.angular.z = 0
+            #         self.velocity_publisher.publish(vel_msg)        
+
             goal_heading = self.calculate_angle_between_gps(self.goal_lat_long,self.current_location)
             print("Goal Heading",goal_heading)
             current_heading = self.calculate_angle_between_gps(self.current_location,self.past_location)
@@ -183,13 +206,14 @@ class Rover_Robot_Controller:
                 vel_msg.angular.y = 0
                 vel_msg.angular.z = 0
                 # Calculates current distance
-                current_dist = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
+                current_dist2 = distance.distance((self.current_location.loc.x, self.current_location.loc.y)\
                 , (self.goal_lat_long.loc.x,self.goal_lat_long.loc.y)).m
-                print(current_dist)
-                print(original_distance - stop_cnt + 0.1)
-                print(original_distance - stop_cnt - 0.1)
-                # If current distance is one meter away from last stop/original distance, stop (+-0.1m error)
-                if current_dist <= (original_distance - stop_cnt + 0.1) and current_dist >= (original_distance - stop_cnt - 0.1):
+                # print(current_dist1)
+                # print(original_distance - stop_cnt + 0.2)
+                # print(original_distance - stop_cnt - 0.2)
+                # If current distance is one meter away from last stop/original distance, stop (+-0.3m error)
+                if current_dist2 <= (original_distance - stop_cnt + 0.1) and current_dist2 >= (original_distance - stop_cnt - 0.1):
+                    print("Hi")
                     stop_cnt += 1.0
                     t_end = time.time() + 5
                     while time.time() < t_end:
@@ -201,7 +225,18 @@ class Rover_Robot_Controller:
                         vel_msg.angular.y = 0
                         vel_msg.angular.z = 0
                         self.velocity_publisher.publish(vel_msg)
-                        print("Stopping")
+                    vel_msg.linear.x = 0.5
+                    
+                self.velocity_publisher.publish(vel_msg)
+            vel_msg = Twist()
+            vel_msg.linear.x = 0
+            vel_msg.linear.y = 0
+            vel_msg.linear.z = 0
+            vel_msg.angular.x = 0
+            vel_msg.angular.y = 0
+            vel_msg.angular.z = 0
+            self.velocity_publisher.publish(vel_msg)
+            print("Stopping")
         vel_msg = Twist()
         vel_msg.linear.x = 0
         vel_msg.linear.y = 0
