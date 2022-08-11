@@ -51,23 +51,13 @@ goal_enu_json = (data["enu_x"],data["enu_y"])
 f.close()
 while not rospy.is_shutdown():
     original_distance = math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))
+    E_last = currentE
+    N_last = currentN
     # original_dist = abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])
     stop_cnt = 1.0
     if not move_once:
         now = time.time()
         while time.time() - now < 2:
-            #if (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.1) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.1):
-                #stop_cnt += 1.0
-                #t_end = time.time() + 5
-                #while time.time() < t_end:
-                    #print("Stopping")
-                    #base_cmdForward.linear.x=0
-                    #base_cmdForward.linear.y= 0
-                    #base_cmdForward.linear.z=0
-                    #base_cmdForward.angular.x=0
-                    #base_cmdForward.angular.y=0
-                    #base_cmdForward.angular.z=0
-                    #rover_cmd_vel_pub.publish(base_cmdForward)
             base_cmdForward.linear.x=0.5
             base_cmdForward.linear.y= 0
             base_cmdForward.linear.z=0
@@ -76,18 +66,11 @@ while not rospy.is_shutdown():
             base_cmdForward.angular.z=0
             rover_cmd_vel_pub.publish(base_cmdForward)
         move_once = True
-    # base_cmdForward.linear.x=0.5
-    # base_cmdForward.linear.y= 0
-    # base_cmdForward.linear.z=0
-    # base_cmdForward.angular.x=0
-    # base_cmdForward.angular.y=0
-    # base_cmdForward.angular.z=0
     while (abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])>distanceTol):
             destiHeading= atan2(goal_enu_json[1]-currentN, goal_enu_json[0]-currentE)
             if (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05):
                 print("Stopping at: ",math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)), "meters from goal")
-                #cE_last = currentE
-                #cN_last = currentN
+                print(math.sqrt(pow(currentE - E_last,2) + pow(currentN - N_last,2)), " meters from last stop")
                 stop_cnt += 1.0
                 #t_start = time.time()
                 #while time.time() <= t_start + 1.25:
@@ -100,10 +83,6 @@ while not rospy.is_shutdown():
                 #        break
                 t_end = time.time() + 5
                 while time.time() < t_end:
-                    #if stop_cnt > 2:
-                    #    stop_distance = math.sqrt(pow(currentE - cE_last,2) + pow(currentN - cN_last,2))
-                    #    print("Stopping at: ", stop_distance, " meters")
-                    #else:
                     base_cmdForward.linear.x=0
                     base_cmdForward.linear.y= 0
                     base_cmdForward.linear.z=0
@@ -111,8 +90,8 @@ while not rospy.is_shutdown():
                     base_cmdForward.angular.y=0
                     base_cmdForward.angular.z=0
                     rover_cmd_vel_pub.publish(base_cmdForward)
-            cE_last = currentE
-            cN_last = currentN
+            E_last = currentE
+            N_last = currentN
             if (abs(destiHeading-currentHeading)<headingTol):
                 base_cmdForward.linear.x=speedNormal
                 base_cmdForward.angular.z=0
@@ -138,7 +117,7 @@ while not rospy.is_shutdown():
 
             gpsreceived = 0
             rospy.sleep(0.1)
-    print(str(i) + " Point Reached!!!")
+    print("Point Reached!!!")
     print("Path Completed")
     base_cmdForward.linear.x=0.0
     base_cmdForward.linear.y= 0
