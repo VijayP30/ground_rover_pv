@@ -51,6 +51,7 @@ goal_enu_json = (data["enu_x"],data["enu_y"])
 f.close()
 while not rospy.is_shutdown():
     original_distance = math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))
+    # original_distance = distance(goal_enu_json[0],goal_enu_json[1])
     E_last = currentE
     N_last = currentN
     stop_cnt = 1.0
@@ -68,6 +69,7 @@ while not rospy.is_shutdown():
     while (abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])>distanceTol):
             destiHeading= atan2(goal_enu_json[1]-currentN, goal_enu_json[0]-currentE)
             if (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05):
+            # if (distance(goal_enu_json[0],goal_enu_json[1]) <= (original_distance - stop_cnt + 0.05)) and (distance(goal_enu_json[0],goal_enu_json[1]) >= (original_distance - stop_cnt - 0.05)):
             # if (x0 := math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05 + 0.25) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05 + 0.25):
                 # t_start = time.time()
                 # while time.time() <= t_start + 1:
@@ -84,8 +86,10 @@ while not rospy.is_shutdown():
                 # x0 = math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))
                 # while (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05)
                 #     base_cmdForward.linear.x = math.sqrt(pow(speedNormal,2) - 1 * (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)) - x0))
-                print("Stopping at: ",math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)), "meters from goal")
+                print("Stopping at: ",math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)), " meters from goal")
+                # print("Stopping at: ", distance(goal_enu_json[0],goal_enu_json[1]), " meters from goal")
                 print(math.sqrt(pow(currentE - E_last,2) + pow(currentN - N_last,2)), " meters from last stop")
+                # print(distance(E_last,N_last), " meters from last stop")
                 stop_cnt += 1.0
                 t_end = time.time() + 5
                 while time.time() < t_end:
