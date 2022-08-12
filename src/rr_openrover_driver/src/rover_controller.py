@@ -68,18 +68,21 @@ while not rospy.is_shutdown():
     while (abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])>distanceTol):
             destiHeading= atan2(goal_enu_json[1]-currentN, goal_enu_json[0]-currentE)
             if (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05):
+                # t_start = time.time()
+                # while time.time() <= t_start + 1:
+                #     base_cmdForward.linear.x = base_cmdForward.linear.x - 0.5 * (time.time() - t_start)
+                #     rover_cmd_vel_pub.publish(base_cmdForward)
+                    # if base_cmdForward.linear.x <= 0:
+                    #     base_cmdForward.linear.x = 0
+                    #     rover_cmd_vel_pub.publish(base_cmdForward)
+                    #     break
+
+                # OR
+
+                # try implements v^2 = v0^2 + a(x-x0)
                 print("Stopping at: ",math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)), "meters from goal")
                 print(math.sqrt(pow(currentE - E_last,2) + pow(currentN - N_last,2)), " meters from last stop")
                 stop_cnt += 1.0
-                #t_start = time.time()
-                #while time.time() <= t_start + 1.25:
-                #    # vel_msg = Twist()
-                #    base_cmdForward.linear.x = base_cmdForward.linear.x - 0.5 * (time.time() - t_start)
-                #    rover_cmd_vel_pub.publish(base_cmdForward)
-                #    if base_cmdForward.linear.x <= 0:
-                #        base_cmdForward.linear.x = 0
-                #        rover_cmd_vel_pub.publish(base_cmdForward)
-                #        break
                 t_end = time.time() + 5
                 while time.time() < t_end:
                     base_cmdForward.linear.x=0
