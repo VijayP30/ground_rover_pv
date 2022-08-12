@@ -53,7 +53,6 @@ while not rospy.is_shutdown():
     original_distance = math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))
     E_last = currentE
     N_last = currentN
-    # original_dist = abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])
     stop_cnt = 1.0
     if not move_once:
         now = time.time()
@@ -90,8 +89,8 @@ while not rospy.is_shutdown():
                     base_cmdForward.angular.y=0
                     base_cmdForward.angular.z=0
                     rover_cmd_vel_pub.publish(base_cmdForward)
-            E_last = currentE
-            N_last = currentN
+                E_last = currentE
+                N_last = currentN
             if (abs(destiHeading-currentHeading)<headingTol):
                 base_cmdForward.linear.x=speedNormal
                 base_cmdForward.angular.z=0
