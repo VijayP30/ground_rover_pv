@@ -68,9 +68,10 @@ while not rospy.is_shutdown():
     while (abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])>distanceTol):
             destiHeading= atan2(goal_enu_json[1]-currentN, goal_enu_json[0]-currentE)
             if (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05):
+            # if (x0 := math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05 + 0.25) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05 + 0.25):
                 # t_start = time.time()
                 # while time.time() <= t_start + 1:
-                #     base_cmdForward.linear.x = base_cmdForward.linear.x - 0.5 * (time.time() - t_start)
+                #     base_cmdForward.linear.x = speedNormal - 0.5 * (time.time() - t_start)
                 #     rover_cmd_vel_pub.publish(base_cmdForward)
                     # if base_cmdForward.linear.x <= 0:
                     #     base_cmdForward.linear.x = 0
@@ -79,7 +80,10 @@ while not rospy.is_shutdown():
 
                 # OR
 
-                # try implements v^2 = v0^2 + a(x-x0)
+                # try to implement v^2 = v0^2 + a(x-x0)
+                # x0 = math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))
+                # while (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) <= (original_distance - stop_cnt + 0.05) and (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2))) >= (original_distance - stop_cnt - 0.05)
+                #     base_cmdForward.linear.x = math.sqrt(pow(speedNormal,2) - 1 * (math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)) - x0))
                 print("Stopping at: ",math.sqrt(pow(currentE - goal_enu_json[0],2) + pow(currentN - goal_enu_json[1],2)), "meters from goal")
                 print(math.sqrt(pow(currentE - E_last,2) + pow(currentN - N_last,2)), " meters from last stop")
                 stop_cnt += 1.0
