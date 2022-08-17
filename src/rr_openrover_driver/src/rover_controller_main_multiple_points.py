@@ -115,10 +115,6 @@ while not rospy.is_shutdown():
             base_cmdForward.angular.z=0
             rover_cmd_vel_pub.publish(base_cmdForward)
         destiHeading+=math.pi
-        while (destiHeading<0):
-            destiHeading+=2*math.pi
-        while (currentHeading<0):
-            currentHeading+=2*math.pi
         while (abs(destiHeading-currentHeading)>headingTol):
             base_cmdForward.linear.x = 0.2
             base_cmdForward.angular.z = 0.2 * i
