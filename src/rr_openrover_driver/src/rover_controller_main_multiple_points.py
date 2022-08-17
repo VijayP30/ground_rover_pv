@@ -56,16 +56,16 @@ while not rospy.is_shutdown():
         goal_enu_json = (data[i][0],data[i][1])
         original_distance = distance(goal_enu_json[0],goal_enu_json[1])
         if not move_once:
-        now = time.time()
-        while time.time() - now < 2:
-            base_cmdForward.linear.x=0.5
-            base_cmdForward.linear.y= 0
-            base_cmdForward.linear.z=0
-            base_cmdForward.angular.x=0
-            base_cmdForward.angular.y=0
-            base_cmdForward.angular.z=0
-            rover_cmd_vel_pub.publish(base_cmdForward)
-        move_once = True
+            now = time.time()
+            while time.time() - now < 2:
+                base_cmdForward.linear.x=0.5
+                base_cmdForward.linear.y= 0
+                base_cmdForward.linear.z=0
+                base_cmdForward.angular.x=0
+                base_cmdForward.angular.y=0
+                base_cmdForward.angular.z=0
+                rover_cmd_vel_pub.publish(base_cmdForward)
+            move_once = True
         while (abs(currentE-goal_enu_json[0])+abs(currentN-goal_enu_json[1])>distanceTol):
             destiHeading= atan2(goal_enu_json[1]-currentN, goal_enu_json[0]-currentE)
             if (distance(goal_enu_json[0],goal_enu_json[1]) <= (original_distance - stop + 0.025)) and (distance(goal_enu_json[0],goal_enu_json[1]) >= (original_distance - stop - 0.025)):
