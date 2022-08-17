@@ -102,7 +102,7 @@ while not rospy.is_shutdown():
             gpsreceived = 0
             rospy.sleep(0.1)
         print("Point Reached!!!") 
-        t_end = time.time() + 5
+        t_end = time.time() + 3
         while time.time() < t_end:   
             base_cmdForward.linear.x=0.0
             base_cmdForward.linear.y= 0
