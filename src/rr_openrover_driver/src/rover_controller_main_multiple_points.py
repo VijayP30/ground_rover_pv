@@ -16,10 +16,12 @@ currentH=0.0
 currentHeading=0.0
 
 distanceTol=0.5
-headingTol= 0.10
+headingTol=0.10
 pidScale=4.5
-speedNormal=0.5
-speedTurn = 0.4
+# speedNormal=0.5
+speedNormal=0.3
+# speedTurn=0.4
+speedTurn = 0.2
 wheelTrack=0.4
 gpsreceived=0
 base_station_location = []
@@ -48,6 +50,7 @@ move_once = False
 f = open('/home/ubuntu/Catkin_ws/src/rr_openrover_driver/src/goal.json')
 data = json.load(f)
 stop = 1.0
+i = 1
 while not rospy.is_shutdown():
     for i in data:
         goal_enu_json = (data[i][0],data[i][1])
@@ -102,7 +105,7 @@ while not rospy.is_shutdown():
             gpsreceived = 0
             rospy.sleep(0.1)
         print("Point Reached!!!") 
-        t_end = time.time() + 5
+        t_end = time.time() + 3
         while time.time() < t_end:   
             base_cmdForward.linear.x=0.0
             base_cmdForward.linear.y= 0
@@ -111,6 +114,16 @@ while not rospy.is_shutdown():
             base_cmdForward.angular.y=0
             base_cmdForward.angular.z=0
             rover_cmd_vel_pub.publish(base_cmdForward)
+        destiHeading+=math.pi
+        while (destiHeading<0):
+            destiHeading+=2*math.pi
+        while (currentHeading<0):
+            currentHeading+=2*math.pi
+        while (abs(destiHeading-currentHeading)>headingTol):
+            base_cmdForward.linear.x = 0.2
+            base_cmdForward.angular.z = 0.2 * i
+            rover_cmd_vel_pub(base_cmdForward)
+        i = i*-1
     print("Path Completed")
     f.close()
     rospy.spin()
