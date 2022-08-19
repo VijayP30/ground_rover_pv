@@ -47,7 +47,7 @@ heading_callback = rospy.Subscriber("/roverheading",Float64, heading_update)
 rover_cmd_vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size = 1)
 time.sleep(30)
 move_once = False
-f = open('/home/ubuntu/Catkin_ws/src/rr_openrover_driver/src/goal.json')
+f = open('/home/ubuntu/Catkin_ws/src/rr_openrover_driver/src/goal_multiple.json')
 data = json.load(f)
 stop = 1.0
 i = 1
