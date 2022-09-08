@@ -35,7 +35,7 @@ stop = 1
 flag = 1
 while not rospy.is_shutdown():
     msg = Twist()
-    msg.linear.x = -0.3
+    msg.linear.x = 0.3
     msg.linear.y = 0
     msg.linear.z = 0
     msg.angular.x = 0
@@ -49,17 +49,16 @@ while not rospy.is_shutdown():
         start_odometry_x = current_odometry_x
         start_odometry_y = current_odometry_y
         flag = -1
+    print(distance(start_odometry_x,start_odometry_y,current_odometry_x,current_odometry_y))
     if (distance(start_odometry_x,start_odometry_y,current_odometry_x,current_odometry_y) < (stop + 0.01)) and (distance(start_odometry_x,start_odometry_y,current_odometry_x,current_odometry_y) > (stop - 0.01)):
         stop += 1
         t_end = time.time() + 5
-        print(time.time())
-        print(t_end)
         while time.time() < t_end:
             msg.linear.x = 0
-            msg.linear.x = 0
-            msg.linear.x = 0
+            msg.linear.y = 0
+            msg.linear.z = 0
             msg.angular.x = 0
-            msg.angular.x = 0
-            msg.angular.x = 0
+            msg.angular.y = 0
+            msg.angular.z = 0
             pub.publish(msg)
     

@@ -43,7 +43,6 @@ output_buffer =0
 current_odometry_x = 0
 current_odometry_y = 0
 stop = 1
-flag = 1
 #Input network shape
 r,c=224,224
 
@@ -53,10 +52,8 @@ previous_command=int(r/2)
 
 '''
 #uncomment to use GPU
-
 if not tf.config.list_physical_devices('XLA_GPU'):
 	print("No GPU was detected.")
-
 gpus = tf.config.experimental.list_physical_devices('XLA_GPU')
 tf.config.experimental.set_visible_devices(gpus[0], 'XLA_GPU')
 #tf.config.experimental.set_memory_growth(gpus[1], True)
@@ -270,7 +267,19 @@ def process_depth(frame):
 
 
 def image_callback(data):
-    
+
+    # if (distance(start_odometry_x,start_odometry_y,current_odometry_x,current_odometry_y) < (stop + 0.01)) and (distance(start_odometry_x,start_odometry_y,current_odometry_x,current_odometry_y) > (stop - 0.01)):
+    #     stop += 1
+    #     t_end = time.time() + 5
+    #     while time.time() < t_end:
+    #         message.linear.x = 0
+    #         message.linear.y = 0
+    #         message.linear.z = 0
+    #         message.angular.x = 0
+    #         message.angular.y = 0
+    #         message.angular.z = 0
+    #         pub.publish(message)
+
 	global buffer_counter, output_buffer,bridge,pub,depth_flag,depth_frame,t0
 	#Conversion from ROS message to opencv frame format
 	frame = bridge.imgmsg_to_cv2(data, "bgr8")
@@ -332,13 +341,10 @@ def image_callback(data):
 # start_odometry_x = current_odometry_x
 # start_odometry_y = current_odometry_y
 
-# if __name__=="__main__":
-while not rospy.is_shutdown():
+if __name__=="__main__":
+# while not rospy.is_shutdown():
 	rospy.init_node("ML_algorithm")
 	rospy.Subscriber("/camera1/color/image_raw",Image,image_callback)
 	rospy.Subscriber("/camera1/depth/image_rect_raw",Image,depth_callback)
 	pub = rospy.Publisher("/cmd_vel",Twist,queue_size = 2)
 	# rospy.spin()
-	
-
-
